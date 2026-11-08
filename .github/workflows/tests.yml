@@ -1,0 +1,26 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: astral-sh/setup-uv@v10.3.3
+        with:
+          enable-cache: true
+
+      - name: Install exact locked dependencies (microphone extra not needed for tests)
+        run: uv sync --locked
+
+      - name: Tests
+        run: uv run pytest
+
+      - name: Command-line tool summarizes the sample lecture
+        run: uv run lecture-summarizer summarize samples/faraday_candle_lecture1.txt

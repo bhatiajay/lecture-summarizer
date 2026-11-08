@@ -1,0 +1,43 @@
+[project]
+name = "lecture-summarizer"
+version = "2.0.0"
+description = "Record a lecture (or load a transcript) and get a short extractive summary"
+readme = "README.md"
+authors = [
+    { name = "jay bhatia", email = "66493349+bhatiajay@users.noreply.github.com" }
+]
+requires-python = ">=3.12,<3.14"
+dependencies = [
+    "en-core-web-sm",
+    "numpy>=2.5.4",
+    "spacy>=3.8,<3.9",
+    "speechrecognition>=3.17",
+]
+
+[project.scripts]
+lecture-summarizer = "lecture_summarizer.cli:main"
+
+[project.optional-dependencies]
+mic = [
+    "pyaudio>=0.2.14",
+]
+
+[build-system]
+requires = ["uv_build>=0.13.7,<0.14.0"]
+build-backend = "uv_build"
+
+[tool.uv.sources]
+en-core-web-sm = { url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl" }
+
+[dependency-groups]
+dev = [
+    "pytest>=9.2.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+filterwarnings = [
+    # Raised inside SpeechRecognition's own imports on Python 3.12, not by this project.
+    "ignore:'aifc' is deprecated:DeprecationWarning",
+    "ignore:'audioop' is deprecated:DeprecationWarning",
+]
